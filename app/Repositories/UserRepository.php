@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\PersonalAccessToken;
+use PhpParser\Node\Expr\Isset_;
 
 class UserRepository{
 
@@ -25,6 +26,7 @@ class UserRepository{
            "gmail.required" => "Gmail alanını boş bırakamazsınız.",
            "gmail.email" => "Gmail alanı geçerli bir e-posta adresi olmalıdır.",
             "gmail.exists" => "Girilen gmail geçersiz.",
+            "gmail.unique" => "Bu mail alınmış.",
            "age.required" => "Yaş kısmını boş bırakamazsınız.",
            "age.integer" => "Yaş kısmına sayısal değer girmeniz gerek.",
            "phonenumber.required" => "Numara kısmını boş bırakamazsınız.",
@@ -74,11 +76,20 @@ class UserRepository{
     }
 
     public function userLogoutRep($id){
-        DB::table('personal_access_tokens')->where("id", $id)->delete();
-        return response()->json([
-            "status"=> "success",
-            "message"=> "Başarıyla token silindi"
-        ]);
+        if(DB::table('personal_access_tokens')->where('id', $id)->exists()){
+            DB::table('personal_access_tokens')->where("id", $id)->delete();
+
+            return response()->json([
+                "status"=> "success",
+                "message"=> "Başarıyla token silindi."
+            ]);
+        }else{
+            return response()->json([
+                "status"=> "Error",
+                "message"=> "Böyle bi token bulunmuyor."
+            ]);
+        }
+
     }
 
 

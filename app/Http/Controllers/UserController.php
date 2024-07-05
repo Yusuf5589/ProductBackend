@@ -26,7 +26,7 @@ class UserController extends Controller
     public function registerUser(Request $req){
         $req->validate([
             "username" => "required|min:8|max:32|unique:user,username",
-            "gmail" => "required|email",
+            "gmail" => "required|email|unique:user,gmail",
             "age" => "required|integer",
             "phonenumber" => "required|min:10|max:10",
             "password" => "required|min:8|max:32",

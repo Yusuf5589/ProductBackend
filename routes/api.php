@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
+
+//Login task
 
 Route::post('/register', [UserController::class,'registerUser']);
 
@@ -18,6 +19,22 @@ Route::post('/forgotpassword', [UserController::class, 'forgotPassword']);
 Route::post('/forgotpassword/{token}/{gmail}', [UserController::class, 'forgotPasswordVerify']);
 
 
+
+//Product task 
+
+Route::get('/prductfind/{id}', [ProductController::class, "productFind"]);
+
+Route::get('/productall', [ProductController::class, 'productAll']);
+
+
 Route::middleware("auth:sanctum")->group(function(){
+
+    //Product task 
+    Route::post('/createproduct', [ProductController::class, 'createProduct']);
+
+    Route::post('/updateproduct', [ProductController::class, 'updateProduct']);
+
+    Route::get('/deleteproduct/{id}', [ProductController::class, 'deleteProduct']);
+
     Route::get('/logout/{id}', [UserController::class,'userLogout']);
 });
